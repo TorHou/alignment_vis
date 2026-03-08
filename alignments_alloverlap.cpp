@@ -59,10 +59,11 @@ int main(int argc, char const ** argv)
         appendValue(sequences, suf);
         //std::cout << i << ": " << suf << std::endl;
         alignment = TAlign(sequences);
-        score = globalAlignment(alignment, Score<int, Simple>(1, -1, -1), AlignConfig<false, false, false, true>(), LinearGaps());
+        //score = globalAlignment(alignment, Score<int, Simple>(1, -1, -1), AlignConfig<false, false, false, true>(), LinearGaps());
+        // 2nd sequence could be smaller than the prefix of the 1st sequence
+        score = globalAlignment(alignment, Score<int, Simple>(1, -1, -1), AlignConfig<false, true, false, true>(), LinearGaps());
         float fscore = (float) score/ (float)(len1-i);
         std::cout << fscore << std::endl;
-
     }
 
     return 0;

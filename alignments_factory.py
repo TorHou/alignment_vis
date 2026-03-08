@@ -3,10 +3,12 @@ from argparse import ArgumentParser
 from Bio import SeqIO
 import matplotlib.pyplot as plt
 import pickle
+import sys
 
 parser = ArgumentParser()
 parser.add_argument("contigfile", help="Contig File")
 parser.add_argument("contigpairs", help="Overlapping Contig-Pairs File")
+parser.add_argument("--addtopickle", help="Add to picklefile")
 
 args = parser.parse_args()
 
@@ -27,7 +29,18 @@ for read in SeqIO.parse(args.contigfile, "fasta"):
 #pairs.append("613APD_1758APD")
 #pairs.append("691APD_1790APD")
 
+
 pair_scores = {}
+if args.addtopickle:
+    print(args.addtopickle)
+    pair_scores = pickle.load(open(args.addtopickle, "rb"))
+
+    print(set(pairs)-pair_scores.keys())
+    pairsn = []
+    for pair in set(pairs)-pair_scores.keys():
+        pairsn.append(pair)
+    pairs = pairsn
+
 
 def shortname(ctg):
     if "_" in ctg:
@@ -44,7 +57,7 @@ for i, pair in enumerate(pairs):
     with open("tmp2.fasta", "w") as f:
         f.write(">" + ctg2 +"\n")
         f.write(contigs[shortname(ctg2)] + "\n")
-    points = subprocess.run(["./alignments", "tmp1.fasta", "tmp2.fasta"], stdout=subprocess.PIPE, universal_newlines=True)
+    points = subprocess.run(["./alignments_200", "tmp1.fasta", "tmp2.fasta"], stdout=subprocess.PIPE, universal_newlines=True)
     pair_scores[pair] = points.stdout.rstrip().split("\n")
     
     #print(points["stdout"])

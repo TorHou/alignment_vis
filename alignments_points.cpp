@@ -11,7 +11,7 @@ using namespace seqan;
 int main(int argc, char const ** argv)
 {
     if (argc != 4){
-        std::cout << "Wrong number of inputs, please provide two paths to the input fasta files" << std::endl;
+        std::cout << "Wrong number of inputs, please provide two paths to the input fasta files. And the point as Integer." << std::endl;
         return 1;  // Invalid number of arguments.
     }
 
@@ -75,9 +75,10 @@ int main(int argc, char const ** argv)
         appendValue(sequences, suf);
         //std::cout << i << ": " << suf << std::endl;
         alignment = TAlign(sequences);
-        score = globalAlignment(alignment, Score<int, Simple>(1, -1, -1), AlignConfig<false, false, false, true>(), LinearGaps());
+        //score = globalAlignment(alignment, Score<int, Simple>(1, -1, -1), AlignConfig<false, false, false, true>(), LinearGaps());
+        score = globalAlignment(alignment, Score<int, Simple>(1, -1, -1), AlignConfig<false, true, false, true>(), LinearGaps());
         float fscore = (float) score/ (float)(len1-i);
-        std::cout << i << "\t" << fscore << std::endl;
+        std::cout << i-len1 << "\t" << fscore << std::endl;
     }
 
     return 0;
